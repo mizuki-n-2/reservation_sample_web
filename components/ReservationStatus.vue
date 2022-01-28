@@ -19,18 +19,18 @@
         </tr>
       </thead>
       <tbody>
-        <template v-for="hourlyAvailabilityList in hourlyAvailabilityList">
-          <tr :key="hourlyAvailabilityList.time">
-            <td>{{ hourlyAvailabilityList.time }}</td>
+        <template v-for="(availableHour, i) in availableHourList">
+          <tr :key="availableHour">
+            <td>{{ availableHour }}</td>
             <td
-              v-for="(availability, i) in hourlyAvailabilityList.availabilityList"
-              :key="hourlyAvailabilityList.time + '_' + i"
+              v-for="(hourlyAvailability, j) in hourlyAvailabilityList[i]"
+              :key="j"
             >
               <a
-                @click="sendReservation(dateList[i], hourlyAvailabilityList.time, availability)"
                 class="white--text d-block text-center"
+                @click="sendReservation(dateList[j], availableHour, availability)"
               >
-                {{ availability }}
+                {{ hourlyAvailability }}
               </a>
             </td>
           </tr>
@@ -49,12 +49,9 @@ export default {
     return {
       dateList: [],
       weekNumber: 7,
+      availableHourList: ["9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00"],
       hourlyAvailabilityList: [],
     }
-  },
-  created() {
-    this.setDateList(this.startDate)
-    this.setHourlyAvailabilityList()
   },
   computed: {
     startDate: {
@@ -67,6 +64,10 @@ export default {
       },
     },
   },
+  created() {
+    this.setDateList(this.startDate)
+    this.setHourlyAvailabilityList()
+  },
   methods: {
     moveNextWeek() {
       this.startDate = this.startDate.add(this.weekNumber, 'day')
@@ -75,58 +76,31 @@ export default {
       this.startDate = this.startDate.subtract(this.weekNumber, 'day')
     },
     setDateList() {
-      var dateListClone = this.dateList
+      let dateListClone = this.dateList
       dateListClone = []
-      var date = moment(this.startDate)
+      const date = moment(this.startDate)
       dateListClone.push(date.format('M/D(dd)'))
-      for (var i = 0; i < this.weekNumber - 1; i++) {
+      for (let i = 0; i < this.weekNumber - 1; i++) {
         dateListClone.push(date.add(1, 'day').format('M/D(dd)'))
       }
       this.dateList = dateListClone
     },
     setAvailabilityList() {
-      //ダミー配列データ生成
-      var array = []
+      // ダミー配列データ生成
+      const array = []
       for (let i = 0; i < this.weekNumber; i++) {
         array.push(['◎', '○', '△', '×', '-'][Math.floor(Math.random()*10%5)])
       }
       return array
     },
     setHourlyAvailabilityList() {
-      this.hourlyAvailabilityList = [
-        {
-          time: '9:00',
-          availabilityList: this.setAvailabilityList(),
-        },
-        {
-          time: '10:00',
-          availabilityList: this.setAvailabilityList(),
-        },
-        {
-          time: '11:00',
-          availabilityList: this.setAvailabilityList(),
-        },
-        {
-          time: '12:00',
-          availabilityList: this.setAvailabilityList(),
-        },
-        {
-          time: '13:00',
-          availabilityList: this.setAvailabilityList(),
-        },
-        {
-          time: '14:00',
-          availabilityList: this.setAvailabilityList(),
-        },
-        {
-          time: '15:00',
-          availabilityList: this.setAvailabilityList(),
-        },
-      ]
+      for(let i = 0; i < this.availableHourList.length; i++) {
+        this.hourlyAvailabilityList.push(this.setAvailabilityList())
+      }
     },
     sendReservation(date, time, availability) {
-      var text = ''
-      if (availability != '-' && availability != '×') {
+      let text = ''
+      if (availability !== '-' && availability !== '×') {
         text = date + time
       } else {
         text = 'この日程は選択できません。'

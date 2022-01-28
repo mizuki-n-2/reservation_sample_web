@@ -11,13 +11,13 @@
 import ReservationStatus from '~/components/ReservationStatus.vue'
 
 export default {
+  components: {
+    ReservationStatus
+  },
   data() {
     return {
       text: '日程未選択です'
     }
   },
-  components: {
-    ReservationStatus
-  }
 }
 </script>
