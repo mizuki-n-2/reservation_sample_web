@@ -23,14 +23,14 @@
           <tr :key="availableHour">
             <td>{{ availableHour }}</td>
             <td
-              v-for="(hourlyAvailability, j) in hourlyAvailabilityList[i]"
+              v-for="(availability, j) in hourlyAvailabilityList[i]"
               :key="j"
             >
               <a
                 class="white--text d-block text-center"
                 @click="sendReservation(dateList[j], availableHour, availability)"
               >
-                {{ hourlyAvailability }}
+                {{ availability }}
               </a>
             </td>
           </tr>
