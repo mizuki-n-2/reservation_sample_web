@@ -67,7 +67,7 @@ export default {
         }
       ],
       miniVariant: true,
-      title: '観光予約システム'
+      title: '予約システム'
     }
   }
 }
