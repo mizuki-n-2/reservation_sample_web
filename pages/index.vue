@@ -2,8 +2,7 @@
   <v-row>
     <v-col>
       <h2 class="my-3">予約状況</h2>
-      <reservation-status @sendReservation="text = $event"></reservation-status>
-      <p>{{ text }}</p>
+      <reservation-status @sendReservationDatetime="goToRegister"></reservation-status>
     </v-col>
     <v-col>
       <h2 class="my-3">予約確認</h2>
@@ -54,6 +53,9 @@ export default {
     searchReservation() {
       this.beforeSearch = false
       this.matchedReservation = this.reservations.find(reservation => reservation.id === this.searchReservationId)
+    },
+    goToRegister(reservationDatetimeText) {
+      this.$router.push(`/reservation/${reservationDatetimeText}`)
     },
   },
 }

@@ -99,13 +99,23 @@ export default {
       }
     },
     sendReservation(date, time, availability) {
-      let text = ''
-      if (availability !== '-' && availability !== '×') {
-        text = date + time
-      } else {
-        text = 'この日程は選択できません。'
+      if (availability === '-') {
+        alert('販売期間外のため、予約できません。')
+        return
       }
-      this.$emit('sendReservation', text)
+
+      if (availability === '×') {
+        alert('既に予約がいっぱいのため、予約できません。')
+        return
+      }
+
+      if (moment().isAfter(moment(date + ' ' + time, 'M/D(dd) H:mm'))) {
+        alert('現在時刻より前に予約できません。')
+        return
+      }
+
+      const datetimeText = moment(`${date} ${time}`, 'M/D(dd) HH:mm').format('YYYY-M-D-H:mm')
+      this.$emit('sendReservationDatetime', datetimeText)
     },
   },
 }
