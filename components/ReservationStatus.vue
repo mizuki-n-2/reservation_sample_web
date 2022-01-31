@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import moment from 'moment'
-moment.locale('ja')
+import * as moment from 'moment'
+import 'moment/locale/ja'
 
 export default {
   data() {
