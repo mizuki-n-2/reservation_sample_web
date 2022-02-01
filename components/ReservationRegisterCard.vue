@@ -152,7 +152,8 @@
             </v-list-item>
             <v-list-item>
               <v-item-list-content class="mx-auto">
-                <v-btn @click="submitReservation">登録する</v-btn>
+                <v-btn @click="backToTop" class="mx-2">キャンセル</v-btn> 
+                <v-btn @click="submitReservation" color="primary" class="mx-2">登録する</v-btn>
               </v-item-list-content>
             </v-list-item>
           </v-list>
@@ -183,6 +184,9 @@ export default {
     submitReservation() {
       // TODO: 予約登録処理
       alert('予約を登録しました。メールをご確認ください。')
+      this.$router.push('/')
+    },
+    backToTop() {
       this.$router.push('/')
     },
   }

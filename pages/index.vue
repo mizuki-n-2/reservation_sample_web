@@ -64,7 +64,7 @@ export default {
         },
         {
           id: 2,
-          date: '2022-02-01',
+          date: '2022-02-02',
           startTime: '15:00',
           status: '△',
         },
