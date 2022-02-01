@@ -3,11 +3,7 @@
     <v-col cols="8">
       <v-card>
         <v-card-title class="d-block text-center"> 予約登録 </v-card-title>
-        <v-form
-          ref="form"
-          v-model="valid"
-          lazy-validation
-        >
+        <v-form ref="form">
           <v-card-text>
             <v-list>
               <v-list-item>
@@ -118,7 +114,8 @@
                 <v-spacer></v-spacer>
                 <v-list-item-content>
                   <v-list-item-title
-                    >小学生料金(お一人様)： {{ primarySchoolChildAmount }}円</v-list-item-title
+                    >小学生料金(お一人様)：
+                    {{ primarySchoolChildAmount }}円</v-list-item-title
                   >
                 </v-list-item-content>
               </v-list-item>
@@ -135,7 +132,7 @@
                 <v-spacer></v-spacer>
                 <v-list-item-content>
                   <v-list-item-title
-                    >子供料金(お一人様)：  {{ childAmount }}円</v-list-item-title
+                    >子供料金(お一人様)： {{ childAmount }}円</v-list-item-title
                   >
                 </v-list-item-content>
               </v-list-item>
@@ -144,7 +141,7 @@
                   <v-list-item-title>
                     合計金額： {{ totalAmount }}円
                   </v-list-item-title>
-                </v-list-item-content>    
+                </v-list-item-content>
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
@@ -166,19 +163,42 @@
                   >
                 </v-list-item-content>
                 <v-list-item-content>
-                  <v-select v-model="numberOfVisits" :items="numberOfVisitsItems" dense></v-select>
+                  <v-select
+                    v-model="numberOfVisits"
+                    :items="numberOfVisitsItems"
+                    dense
+                  ></v-select>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title>質問があればこちらに</v-list-item-title>
-                  <v-textarea v-model="question" :counter="255" :rules="[rules.maxLengthQuestion]"></v-textarea>
+                  <v-textarea
+                    v-model="question"
+                    :counter="255"
+                    :rules="[rules.maxLengthQuestion]"
+                  ></v-textarea>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-checkbox
+                    v-model="finalCheck"
+                    :rules="[rules.required]"
+                    label="上記の内容でよろしいですか？"
+                    required
+                  ></v-checkbox>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
                 <v-item-list-content class="mx-auto">
                   <v-btn class="mx-2" @click="backToTop">キャンセル</v-btn>
-                  <v-btn color="primary" class="mx-2" :disabled="!valid" @click="submitReservation">登録する</v-btn
+                  <v-btn
+                    color="primary"
+                    class="mx-2"
+                    :disabled="!valid"
+                    @click="submitReservation"
+                    >登録する</v-btn
                   >
                 </v-item-list-content>
               </v-list-item>
@@ -197,7 +217,6 @@ import 'moment/locale/ja'
 export default {
   data() {
     return {
-      valid: false,
       name: '',
       furigana: '',
       email: '',
@@ -213,38 +232,57 @@ export default {
       isFirst: null,
       numberOfVisits: null,
       question: '',
+      finalCheck: false,
       numberOfVisitsItems: ['初めて', '2回目', '3回目', '4回目以上'],
       rules: {
         required: (value) => !!value || '必須項目です。',
         email: (value) => {
           const EMAIL_PATTERN = /^[A-Za-z0-9]+@[A-Za-z0-9]+\.[A-Za-z0-9]+$/
-          return EMAIL_PATTERN.test(value) || 'メールアドレスの形式が正しくありません。'
+          return (
+            EMAIL_PATTERN.test(value) ||
+            'メールアドレスの形式が正しくありません。'
+          )
         },
         emailConfirm: (value) => {
           return value === this.email || 'メールアドレスが一致しません。'
         },
         phoneNumber: (value) => {
           const PHONE_NUMBER_PATTERN = /^0[-0-9]{9,12}$/
-          return PHONE_NUMBER_PATTERN.test(value) || '電話番号の形式が正しくありません。'
+          return (
+            PHONE_NUMBER_PATTERN.test(value) ||
+            '電話番号の形式が正しくありません。'
+          )
         },
         positiveInteger: (value) => {
           const POSITIVE_INTEGER_PATTERN = /^[0-9]*$/
           const MAX_NUMBER = 100
-          return POSITIVE_INTEGER_PATTERN.test(value) && value <= MAX_NUMBER || '不正な値です。'
+          return (
+            (POSITIVE_INTEGER_PATTERN.test(value) && value <= MAX_NUMBER) ||
+            '不正な値です。'
+          )
         },
         maxLengthName: (value) => {
           const NAME_MAX_LENGTH = 20
-          return value.length <= NAME_MAX_LENGTH || `文字数は${NAME_MAX_LENGTH}以下にしてください。`
+          return (
+            value.length <= NAME_MAX_LENGTH ||
+            `文字数は${NAME_MAX_LENGTH}以下にしてください。`
+          )
         },
         maxLengthAddress: (value) => {
           const ADDRESS_MAX_LENGTH = 10
-          return value.length <= ADDRESS_MAX_LENGTH || `文字数は${ADDRESS_MAX_LENGTH}以下にしてください。`
+          return (
+            value.length <= ADDRESS_MAX_LENGTH ||
+            `文字数は${ADDRESS_MAX_LENGTH}以下にしてください。`
+          )
         },
         maxLengthQuestion: (value) => {
           const QUESTION_MAX_LENGTH = 255
-          return value.length <= QUESTION_MAX_LENGTH || `文字数は${QUESTION_MAX_LENGTH}以下にしてください。`
+          return (
+            value.length <= QUESTION_MAX_LENGTH ||
+            `文字数は${QUESTION_MAX_LENGTH}以下にしてください。`
+          )
         },
-      }
+      },
     }
   },
   computed: {
@@ -254,8 +292,15 @@ export default {
       return moment(datetime, 'YYYY-M-D-H:mm').format('YYYY年M月D日(dd) H:mm')
     },
     totalAmount() {
-      return this.adultNumber * this.adultAmount + this.primarySchoolChildNumber * this.primarySchoolChildAmount + this.childNumber * this.childAmount
+      return (
+        this.adultNumber * this.adultAmount +
+        this.primarySchoolChildNumber * this.primarySchoolChildAmount +
+        this.childNumber * this.childAmount
+      )
     },
+    valid() {
+      return this.finalCheck ?? this.$refs.form.validate()
+    }
   },
   methods: {
     submitReservation() {
