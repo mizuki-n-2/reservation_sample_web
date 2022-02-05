@@ -46,25 +46,25 @@ export default {
       reservationAvailableSchedules: [
         {
           id: 1,
-          date: '2022-01-31',
+          date: '2022-02-05',
           startTime: '9:00',
           status: '◎',
         },
         {
           id: 3,
-          date: '2022-06-12',
+          date: '2022-02-08',
           startTime: '10:00',
           status: '×',
         },
         {
           id: 4,
-          date: '2022-06-18',
+          date: '2022-02-10',
           startTime: '12:00',
           status: '◎',
         },
         {
           id: 2,
-          date: '2022-02-02',
+          date: '2022-02-09',
           startTime: '15:00',
           status: '△',
         },
