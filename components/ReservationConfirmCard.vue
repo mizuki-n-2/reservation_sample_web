@@ -20,12 +20,12 @@
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title>予約時間： {{ reservation.hour }}開始</v-list-item-title>
+                  <v-list-item-title>予約時間： {{ reservation.startTime }}開始</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title>予約人数： {{ reservation.number }}人</v-list-item-title>
+                  <v-list-item-title>予約人数： {{ reservation.numberOfPeople }}人</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
@@ -40,7 +40,7 @@
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title>電話番号： {{ reservation.phone }}</v-list-item-title>
+                  <v-list-item-title>電話番号： {{ reservation.phoneNumber }}</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
@@ -60,11 +60,11 @@ export default {
       default: () => ({
         id: 0,
         date: '',
-        hour: '',
-        number: 0,
+        startTime: '',
+        numberOfPeople: 0,
         name: '',
         email: '',
-        phone: '',
+        phoneNumber: '',
       }),
     },
   },

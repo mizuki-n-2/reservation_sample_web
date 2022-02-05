@@ -3,6 +3,7 @@
     <v-col>
       <h2 class="my-3">予約状況</h2>
       <reservation-status
+        v-if="isShow"
         :reservation-available-schedules="reservationAvailableSchedules"
         @sendReservationDatetime="goToRegister"
       ></reservation-status>
@@ -39,49 +40,23 @@ export default {
   },
   data() {
     return {
+      isShow: false,
       beforeSearch: true,
       searchReservationId: '',
       text: '日程未選択です',
       // 時間昇順->日付昇順にする
-      reservationAvailableSchedules: [
-        {
-          id: 1,
-          date: '2022-02-05',
-          startTime: '9:00',
-          status: '◎',
-        },
-        {
-          id: 3,
-          date: '2022-02-08',
-          startTime: '10:00',
-          status: '×',
-        },
-        {
-          id: 4,
-          date: '2022-02-10',
-          startTime: '12:00',
-          status: '◎',
-        },
-        {
-          id: 2,
-          date: '2022-02-09',
-          startTime: '15:00',
-          status: '△',
-        },
-      ],
-      reservations: [
-        {
-          id: 'reservation-id-1',
-          date: '2022年6月11日(土)',
-          hour: '10:00',
-          number: 2,
-          name: 'マイケル・ジョンソン',
-          email: 'aaa@sample.com',
-          phone: '000-0000-0000',
-        },
-      ],
+      reservationAvailableSchedules: [],
+      reservations: [],
       matchedReservation: null,
     }
+  },
+  async created() {
+    await this.$accessor.getReservations()
+    await this.$accessor.getReservationAvailableSchedules()
+    this.reservations = this.$accessor.reservations
+    this.reservationAvailableSchedules = this.$accessor.reservationAvailableSchedules
+
+    this.isShow = true
   },
   methods: {
     searchReservation() {

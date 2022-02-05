@@ -12,8 +12,9 @@ export default {
     ReservationRegisterCard,
   },
   methods: {
-    submitReservation(reservation) {
-      // TODO: 予約登録処理
+    async submitReservation(reservation) {
+      await this.$accessor.postReservation(reservation)
+      
       alert("予約に成功しました。", reservation)
       this.$router.push('/')
     },

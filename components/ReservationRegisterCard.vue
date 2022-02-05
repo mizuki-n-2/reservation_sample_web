@@ -314,7 +314,13 @@ export default {
         return
       }
 
+      const datetime = this.$route.params.datetime
+      const date = moment(datetime, 'YYYY-M-D-H:mm').format('YYYY-MM-DD')
+      const startTime = moment(datetime, 'YYYY-M-D-H:mm').format('HH:mm')
+
       const reservation = {
+        date,
+        startTime,
         name: this.name,
         furigana: this.furigana,
         email: this.email,
