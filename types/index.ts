@@ -1,11 +1,12 @@
 export type Reservation = {
-  id: string
+  id: number
   date: string
   startTime: string
   numberOfPeople: number
   name: string
   email: string
   phoneNumber: string
+  searchId: string
 }
 
 export type ReservationAvailableSchedule = {

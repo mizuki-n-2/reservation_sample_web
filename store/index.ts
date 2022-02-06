@@ -28,13 +28,14 @@ export const actions = actionTree({ state, getters, mutations }, {
     // TODO: fetch reservations from API
     const reservations = [
       {
-        id: 'reservation-id-1',
+        id: 1,
         date: '2022年6月11日(土)',
         startTime: '10:00',
         numberOfPeople: 2,
         name: 'マイケル・ジョンソン',
         email: 'aaa@sample.com',
         phoneNumber: '000-0000-0000',
+        searchId: 'reservation1',
       },
     ]
 
@@ -82,7 +83,8 @@ export const actions = actionTree({ state, getters, mutations }, {
   // TODO: change any type
   async postReservation({ commit }, reservation: any) {
     // TODO: post reservation to API
-    const reservationId = 'reservation-id-00'
+    const reservationId = 2
+    const searchId = 'reservation2'
 
     const numberOfPeople = Number(reservation.adultNumber) + Number(reservation.primarySchoolChildNumber) + Number(reservation.childNumber)
 
@@ -94,6 +96,7 @@ export const actions = actionTree({ state, getters, mutations }, {
       name: reservation.name,
       email: reservation.email,
       phoneNumber: reservation.phoneNumber,
+      searchId,
     }
 
     commit('addReservation', newReservation)

@@ -11,8 +11,8 @@
     <v-col>
       <h2 class="my-3">予約確認</h2>
       <v-text-field
-        v-model="searchReservationId"
-        label="確認したい予約のIDを入力してください"
+        v-model="searchId"
+        label="確認したい予約の検索用IDを入力してください"
         append-outer-icon="mdi-magnify"
         @click:append-outer="searchReservation"
         @keydown.enter="searchReservation"
@@ -42,7 +42,7 @@ export default {
     return {
       isShow: false,
       beforeSearch: true,
-      searchReservationId: '',
+      searchId: '',
       text: '日程未選択です',
       // 時間昇順->日付昇順にする
       reservationAvailableSchedules: [],
@@ -62,7 +62,7 @@ export default {
     searchReservation() {
       this.beforeSearch = false
       this.matchedReservation = this.reservations.find(
-        (reservation) => reservation.id === this.searchReservationId
+        (reservation) => reservation.searchId === this.searchId
       )
     },
     goToRegister(reservationDatetimeText) {
