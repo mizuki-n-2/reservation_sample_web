@@ -15,7 +15,7 @@ export default {
     async submitReservation(reservation) {
       await this.$accessor.postReservation(reservation)
       
-      alert("予約に成功しました。", reservation)
+      alert("予約に成功しました。")
       this.$router.push('/')
     },
   },

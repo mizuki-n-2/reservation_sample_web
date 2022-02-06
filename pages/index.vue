@@ -20,6 +20,7 @@
       <div v-if="matchedReservation">
         <reservation-confirm-card
           :reservation="matchedReservation"
+          @deleteReservation="deleteReservation"
         ></reservation-confirm-card>
       </div>
       <p v-if="!beforeSearch && !matchedReservation">
@@ -46,15 +47,19 @@ export default {
       text: '日程未選択です',
       // 時間昇順->日付昇順にする
       reservationAvailableSchedules: [],
-      reservations: [],
       matchedReservation: null,
     }
+  },
+  computed: {
+    reservations() {
+      return this.$accessor.reservations
+    },
   },
   async created() {
     await this.$accessor.getReservations()
     await this.$accessor.getReservationAvailableSchedules()
-    this.reservations = this.$accessor.reservations
-    this.reservationAvailableSchedules = this.$accessor.reservationAvailableSchedules
+    this.reservationAvailableSchedules =
+      this.$accessor.reservationAvailableSchedules
 
     this.isShow = true
   },
@@ -67,6 +72,11 @@ export default {
     },
     goToRegister(reservationDatetimeText) {
       this.$router.push(`/reservation/${reservationDatetimeText}`)
+    },
+    async deleteReservation(reservationId) {
+      await this.$accessor.deleteReservation(reservationId)
+
+      alert('予約に取り消しに成功しました。')
     },
   },
 }

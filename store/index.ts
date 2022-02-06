@@ -18,6 +18,9 @@ export const mutations = mutationTree(state, {
   addReservation(state, reservation: Reservation) {
     state.reservations.push(reservation)
   },
+  deleteReservation(state, reservationId: number) {
+    state.reservations = state.reservations.filter(reservation => reservation.id !== reservationId)
+  },
   setReservationAvailableSchedules(state, reservationAvailableSchedules: ReservationAvailableSchedule[]) {
     state.reservationAvailableSchedules = reservationAvailableSchedules
   }
@@ -100,6 +103,10 @@ export const actions = actionTree({ state, getters, mutations }, {
     }
 
     commit('addReservation', newReservation)
+  },
+  async deleteReservation({ commit }, reservationId: number) {
+    // TODO: delete reservation from API
+    commit('deleteReservation', reservationId)
   },
 })
 
