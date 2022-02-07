@@ -191,11 +191,12 @@
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
-                <v-list-item-content class="mx-auto">
-                  <v-btn class="mx-2" @click="backToTop">キャンセル</v-btn>
+                <v-list-item-content>
+                  <v-btn @click="backToTop">キャンセル</v-btn>
+                </v-list-item-content>
+                <v-list-item-content>
                   <v-btn
                     color="primary"
-                    class="mx-2"
                     :disabled="!valid"
                     @click="submitReservation"
                     >登録する</v-btn
@@ -288,15 +289,6 @@ export default {
       },
     }
   },
-  async created() {
-    await this.$accessor.getReservationAvailableSchedules()
-    this.scheduleId = parseInt(this.$route.params.availableScheduleId)
-    const availableSchedule = this.$accessor.findAvailableSchedule(
-      this.scheduleId
-    )
-    this.date = availableSchedule.date
-    this.startTime = availableSchedule.startTime
-  },
   computed: {
     reservationDatetime() {
       return moment(
@@ -314,6 +306,15 @@ export default {
     valid() {
       return this.finalCheck ?? this.$refs.form.validate()
     },
+  },
+  async created() {
+    await this.$accessor.getReservationAvailableSchedules()
+    this.scheduleId = parseInt(this.$route.params.availableScheduleId)
+    const availableSchedule = this.$accessor.findAvailableSchedule(
+      this.scheduleId
+    )
+    this.date = availableSchedule.date
+    this.startTime = availableSchedule.startTime
   },
   methods: {
     submitReservation() {

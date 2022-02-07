@@ -116,16 +116,16 @@ export default {
       )
 
       for (let i = 0; i < this.weekNumber; i++) {
-        let pushedObject = {}
+        const pushedObject = {}
         if (
           availableSchedules.length &&
           this.dateList[i] === this.formatDate(availableSchedules[0].date)
         ) {
-          pushedObject['id'] = availableSchedules[0].id
-          pushedObject['status'] = availableSchedules[0].status
+          pushedObject.id = availableSchedules[0].id
+          pushedObject.status = availableSchedules[0].status
         } else {
-          pushedObject['id'] = 0
-          pushedObject['status'] = '-'
+          pushedObject.id = 0
+          pushedObject.status = '-'
         }
         returnArray.push(pushedObject)
       }
@@ -154,8 +154,14 @@ export default {
         return
       }
 
+
       if (this.isBeforeCurrentTime(date, time)) {
         alert('現在時刻より前に予約できません。')
+        return
+      }
+
+      if (availability.id === 0) {
+        alert('予期せぬエラーが発生しました。')
         return
       }
 
