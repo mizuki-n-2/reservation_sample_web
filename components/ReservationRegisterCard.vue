@@ -191,7 +191,7 @@
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
-                <v-item-list-content class="mx-auto">
+                <v-list-item-content class="mx-auto">
                   <v-btn class="mx-2" @click="backToTop">キャンセル</v-btn>
                   <v-btn
                     color="primary"
@@ -200,7 +200,7 @@
                     @click="submitReservation"
                     >登録する</v-btn
                   >
-                </v-item-list-content>
+                </v-list-item-content>
               </v-list-item>
             </v-list>
           </v-card-text>
@@ -217,6 +217,9 @@ import 'moment/locale/ja'
 export default {
   data() {
     return {
+      scheduleId: null,
+      date: '',
+      startTime: '',
       name: '',
       furigana: '',
       email: '',
@@ -285,11 +288,21 @@ export default {
       },
     }
   },
+  async created() {
+    await this.$accessor.getReservationAvailableSchedules()
+    this.scheduleId = parseInt(this.$route.params.availableScheduleId)
+    const availableSchedule = this.$accessor.findAvailableSchedule(
+      this.scheduleId
+    )
+    this.date = availableSchedule.date
+    this.startTime = availableSchedule.startTime
+  },
   computed: {
     reservationDatetime() {
-      const datetime = this.$route.params.datetime
-
-      return moment(datetime, 'YYYY-M-D-H:mm').format('YYYY年M月D日(dd) H:mm')
+      return moment(
+        `${this.date} ${this.startTime}`,
+        'YYYY-MM-DD HH:mm'
+      ).format('YYYY年M月D日(dd) H:mm')
     },
     totalAmount() {
       return (
@@ -300,7 +313,7 @@ export default {
     },
     valid() {
       return this.finalCheck ?? this.$refs.form.validate()
-    }
+    },
   },
   methods: {
     submitReservation() {

@@ -22,15 +22,14 @@
         <template v-for="(availableHour, i) in availableHourList">
           <tr :key="availableHour">
             <td>{{ availableHour }}</td>
-            <td
-              v-for="(availability, j) in hourlyAvailabilityList[i]"
-              :key="j"
-            >
+            <td v-for="(availability, j) in hourlyAvailabilityList[i]" :key="j">
               <a
                 class="white--text d-block text-center"
-                @click="sendReservation(dateList[j], availableHour, availability)"
+                @click="
+                  sendReservation(availability, dateList[j], availableHour)
+                "
               >
-                {{ availability }}
+                {{ availability.status }}
               </a>
             </td>
           </tr>
@@ -57,7 +56,15 @@ export default {
     return {
       dateList: [],
       weekNumber: 7,
-      availableHourList: ["9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00"],
+      availableHourList: [
+        '9:00',
+        '10:00',
+        '11:00',
+        '12:00',
+        '13:00',
+        '14:00',
+        '15:00',
+      ],
       hourlyAvailabilityList: [],
     }
   },
@@ -94,21 +101,39 @@ export default {
       this.dateList = dateListClone
     },
     setAvailabilityList(index) {
-      const returnStatusArray = []
+      const returnArray = []
 
-      const availableSchedules = _.intersectionWith(this.reservationAvailableSchedules, this.dateList, (a, b) => {
-        return !this.isBeforeCurrentTime(this.formatDate(a.date), a.startTime) && this.formatDate(a.date) === b && a.startTime === this.availableHourList[index]
-      })
+      const availableSchedules = _.intersectionWith(
+        this.reservationAvailableSchedules,
+        this.dateList,
+        (a, b) => {
+          return (
+            !this.isBeforeCurrentTime(this.formatDate(a.date), a.startTime) &&
+            this.formatDate(a.date) === b &&
+            a.startTime === this.availableHourList[index]
+          )
+        }
+      )
 
-      for(let i = 0; i < this.weekNumber; i++) {
-        const status = availableSchedules.length && this.dateList[i] === this.formatDate(availableSchedules[0].date) ? availableSchedules[0].status : '-'
-        returnStatusArray.push(status)
+      for (let i = 0; i < this.weekNumber; i++) {
+        let pushedObject = {}
+        if (
+          availableSchedules.length &&
+          this.dateList[i] === this.formatDate(availableSchedules[0].date)
+        ) {
+          pushedObject['id'] = availableSchedules[0].id
+          pushedObject['status'] = availableSchedules[0].status
+        } else {
+          pushedObject['id'] = 0
+          pushedObject['status'] = '-'
+        }
+        returnArray.push(pushedObject)
       }
 
-      return returnStatusArray
+      return returnArray
     },
     setHourlyAvailabilityList() {
-      for(let i = 0; i < this.availableHourList.length; i++) {
+      for (let i = 0; i < this.availableHourList.length; i++) {
         this.hourlyAvailabilityList.push(this.setAvailabilityList(i))
       }
     },
@@ -118,13 +143,13 @@ export default {
     formatDate(date) {
       return moment(date).format('M/D(dd)')
     },
-    sendReservation(date, time, availability) {
-      if (availability === '-') {
+    sendReservation(availability, date, time) {
+      if (availability.status === '-') {
         alert('販売期間外のため、予約できません。')
         return
       }
 
-      if (availability === '×') {
+      if (availability.status === '×') {
         alert('既に予約がいっぱいのため、予約できません。')
         return
       }
@@ -134,8 +159,7 @@ export default {
         return
       }
 
-      const datetimeText = moment(`${date} ${time}`, 'M/D(dd) HH:mm').format('YYYY-M-D-H:mm')
-      this.$emit('sendReservationDatetime', datetimeText)
+      this.$emit('sendReservationDatetime', availability.id)
     },
   },
 }

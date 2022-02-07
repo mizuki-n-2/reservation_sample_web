@@ -52,7 +52,7 @@
               </v-list-item>
               <v-list-item>
                 <v-list-item-content>
-                  <v-btn @click="deleteReservation" :disabled="!isCanBeCanceled"
+                  <v-btn :disabled="!isCanBeCanceled" @click="deleteReservation"
                     >この予約を取り消す</v-btn
                   >
                 </v-list-item-content>
