@@ -70,11 +70,16 @@ export default {
         (reservation) => reservation.searchId === this.searchId
       )
     },
-    goToRegister(reservationDatetimeText) {
-      this.$router.push(`/reservation/${reservationDatetimeText}`)
+    goToRegister(scheduleId) {
+      this.$router.push(`/reservation/${scheduleId}`)
     },
-    async deleteReservation(reservationId) {
-      await this.$accessor.deleteReservation(reservationId)
+    async deleteReservation(reservation) {
+      await this.$accessor.deleteReservation(reservation.id)
+
+      await this.$accessor.incrementAvailableNumber({
+        date: reservation.date,
+        startTime: reservation.startTime,
+      })
 
       alert('予約に取り消しに成功しました。')
     },

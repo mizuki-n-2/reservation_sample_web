@@ -110,7 +110,7 @@ export default {
       }
 
       if (window.confirm('この予約を取り消しますか？')) {
-        this.$emit('deleteReservation', this.reservation.id)
+        this.$emit('deleteReservation', this.reservation)
       }
     },
     canBeCanceled(date, time) {

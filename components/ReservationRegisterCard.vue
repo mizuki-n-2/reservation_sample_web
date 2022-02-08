@@ -328,13 +328,9 @@ export default {
         return
       }
 
-      const datetime = this.$route.params.datetime
-      const date = moment(datetime, 'YYYY-M-D-H:mm').format('YYYY-MM-DD')
-      const startTime = moment(datetime, 'YYYY-M-D-H:mm').format('HH:mm')
-
       const reservation = {
-        date,
-        startTime,
+        date: this.date,
+        startTime: this.startTime,
         name: this.name,
         furigana: this.furigana,
         email: this.email,
@@ -350,7 +346,7 @@ export default {
         numberOfVisits: this.numberOfVisits,
         question: this.question,
         totalAmount: this.totalAmount,
-        reservationDatetime: this.reservationDatetime,
+        scheduleId: this.scheduleId,
       }
       this.$emit('submitReservation', reservation)
     },

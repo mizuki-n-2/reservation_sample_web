@@ -13,7 +13,6 @@ export type ReservationAvailableSchedule = {
   id: number
   date: string
   startTime: string
-  status: string
   availableNumber: number
   totalNumber: number
 }

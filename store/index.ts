@@ -36,6 +36,23 @@ export const mutations = mutationTree(state, {
   ) {
     state.reservationAvailableSchedules = reservationAvailableSchedules
   },
+  // TODO: change any type
+  incrementAvailableNumber(
+    state,
+    reservationDateTime: any
+  ) {
+    const index = state.reservationAvailableSchedules.findIndex(
+      (schedule) => schedule.date === reservationDateTime.date && schedule.startTime === reservationDateTime.startTime
+    )
+    state.reservationAvailableSchedules[index].availableNumber += 1 
+  },
+  decrementAvailableNumber(
+    state,
+    scheduleId: number,
+  ) {
+    const index = state.reservationAvailableSchedules.findIndex(schedule => schedule.id === scheduleId)
+    state.reservationAvailableSchedules[index].availableNumber -= 1 
+  },
 })
 
 export const actions = actionTree(
@@ -56,8 +73,8 @@ export const actions = actionTree(
         },
         {
           id: 2,
-          date: '2022-02-07',
-          startTime: '9:00',
+          date: '2022-02-14',
+          startTime: '10:00',
           numberOfPeople: 6,
           name: '田中太郎',
           email: 'bbb@sample.com',
@@ -75,23 +92,20 @@ export const actions = actionTree(
           id: 1,
           date: '2022-02-05',
           startTime: '9:00',
-          status: '◎',
           availableNumber: 8,
           totalNumber: 10,
         },
         {
           id: 3,
-          date: '2022-02-08',
+          date: '2022-02-14',
           startTime: '10:00',
-          status: '×',
-          availableNumber: 0,
+          availableNumber: 5,
           totalNumber: 10,
         },
         {
           id: 4,
           date: '2022-02-10',
           startTime: '12:00',
-          status: '◎',
           availableNumber: 6,
           totalNumber: 10,
         },
@@ -99,7 +113,6 @@ export const actions = actionTree(
           id: 2,
           date: '2022-02-09',
           startTime: '15:00',
-          status: '△',
           availableNumber: 4,
           totalNumber: 10,
         },
@@ -130,10 +143,20 @@ export const actions = actionTree(
       }
 
       commit('addReservation', newReservation)
+      commit('decrementAvailableNumber', reservation.scheduleId)
     },
     async deleteReservation({ commit }, reservationId: number) {
       // TODO: delete reservation from API
       commit('deleteReservation', reservationId)
+    },
+    // TODO: change any type
+    async incrementAvailableNumber({ commit }, reservationDateTime: any) {
+      // TODO: update available schedule status from API
+      commit('incrementAvailableNumber', reservationDateTime)
+    },
+    async decrementAvailableNumber({ commit }, scheduleId: number) {
+      // TODO: update available schedule status from API
+      commit('decrementAvailableNumber', scheduleId)
     },
   }
 )

@@ -83,6 +83,14 @@ export default {
     this.setDateList(this.startDate)
     this.setHourlyAvailabilityList()
   },
+  mounted() {
+    this.$store.subscribe((mutation) => {
+      if (mutation.type === 'decrementAvailableNumber' || mutation.type === 'incrementAvailableNumber') {
+        this.setDateList(this.startDate)
+        this.setHourlyAvailabilityList()
+      }
+    })
+  },
   methods: {
     moveNextWeek() {
       this.startDate = this.startDate.add(this.weekNumber, 'day')
@@ -116,16 +124,16 @@ export default {
       )
 
       for (let i = 0; i < this.weekNumber; i++) {
-        const pushedObject = {}
+        const pushedObject = {
+          id: 0,
+          status: '-',
+        }
         if (
           availableSchedules.length &&
           this.dateList[i] === this.formatDate(availableSchedules[0].date)
         ) {
           pushedObject.id = availableSchedules[0].id
-          pushedObject.status = availableSchedules[0].status
-        } else {
-          pushedObject.id = 0
-          pushedObject.status = '-'
+          pushedObject.status = this.calculateStatus(availableSchedules[0].availableNumber, availableSchedules[0].totalNumber)
         }
         returnArray.push(pushedObject)
       }
@@ -143,6 +151,16 @@ export default {
     },
     formatDate(date) {
       return moment(date).format('M/D(dd)')
+    },
+    calculateStatus(availableNumber, totalNumber) {
+      const rate = availableNumber / totalNumber
+      if (rate >= 0.5) {
+        return '◎'
+      } else if (rate > 0) {
+        return '△'
+      } else {
+        return '×'
+      }
     },
     sendReservation(availability, date, time) {
       if (availability.status === '-') {
