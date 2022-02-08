@@ -79,9 +79,9 @@ export default {
       },
     },
   },
-  async created() {
-    await this.setDateList(this.startDate)
-    await this.setHourlyAvailabilityList()
+  created() {
+    this.setDateList(this.startDate)
+    this.setHourlyAvailabilityList()
   },
   methods: {
     moveNextWeek() {
@@ -133,6 +133,7 @@ export default {
       return returnArray
     },
     setHourlyAvailabilityList() {
+      this.hourlyAvailabilityList = []
       for (let i = 0; i < this.availableHourList.length; i++) {
         this.hourlyAvailabilityList.push(this.setAvailabilityList(i))
       }
