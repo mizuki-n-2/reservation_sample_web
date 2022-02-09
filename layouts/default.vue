@@ -27,8 +27,8 @@
 
       <v-spacer />
       <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn icon @click="changeRole" v-bind="attrs" v-on="on">
+        <template #activator="{ on, attrs }">
+          <v-btn icon v-bind="attrs" @click="changeRole" v-on="on">
             <v-icon>mdi-{{ `${isAdmin ? 'account' : 'account-tie'}` }}</v-icon>
           </v-btn>
         </template>
@@ -83,12 +83,13 @@ export default {
   },
   methods: {
     changeRole() {
-      this.isAdmin = !this.isAdmin
-      if(this.isAdmin) {
+      if(!this.isAdmin) {
         this.$router.push('/admin')
       } else {
         this.$router.push('/')
       }
+
+      this.isAdmin = !this.isAdmin
     },
   }
 }
