@@ -71,7 +71,7 @@ export default {
       )
     },
     goToRegister(scheduleId) {
-      this.$router.push(`/reservation/${scheduleId}`)
+      this.$router.push(`/reservations/${scheduleId}`)
     },
     async deleteReservation(reservation) {
       await this.$accessor.deleteReservation(reservation.id)
