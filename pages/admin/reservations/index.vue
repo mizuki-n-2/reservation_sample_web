@@ -199,7 +199,6 @@ export default {
     exportCsv() {
       // TODO: 予約一覧をCSV形式でダウンロード or 印刷？
       alert('予約一覧をCSV形式でダウンロードしました。')
-      return
     },
   },
 }
