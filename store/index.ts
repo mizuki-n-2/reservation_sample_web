@@ -9,6 +9,7 @@ import { Reservation, ReservationAvailableSchedule } from '~/types'
 export const state = () => ({
   reservations: [] as Reservation[],
   reservationAvailableSchedules: [] as ReservationAvailableSchedule[],
+  token: '' as string,
 })
 
 export const getters = getterTree(state, {
