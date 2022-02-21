@@ -16,7 +16,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "nuxt": "^2.15.7",
-    "nuxt-typed-vuex": "^0.2.0",
+    "nuxt-typed-vuex": "^0.3.0",
     "vuetify": "^2.5.5"
   },
   "devDependencies": {
