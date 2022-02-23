@@ -1,18 +1,9 @@
-export type Reservation = {
-  id: number
-  date: string
-  startTime: string
-  numberOfPeople: number
-  name: string
-  email: string
-  phoneNumber: string
-  searchId: string
-}
+import { components } from './generated-schema'
 
-export type ReservationAvailableSchedule = {
-  id: number
-  date: string
-  startTime: string
-  availableNumber: number
-  totalNumber: number
-}
+export type Reservation = components['schemas']['ReservationResponse']
+export type ReservationRequest = components['schemas']['ReservationRequest']
+
+export type Schedule = components['schemas']['ScheduleResponse']
+export type ScheduleRequest = components['schemas']['ScheduleRequest']
+
+export type LoginRequest = components['schemas']['LoginRequest']

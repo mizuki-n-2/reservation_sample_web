@@ -4,8 +4,8 @@
       <h2 class="my-3">予約状況</h2>
       <reservation-status
         v-if="isShow"
-        :reservation-available-schedules="reservationAvailableSchedules"
-        @sendReservationDatetime="goToRegister"
+        :schedules="schedules"
+        @sendSchedule="goToRegister"
       ></reservation-status>
     </v-col>
     <v-col>
@@ -45,8 +45,7 @@ export default {
       beforeSearch: true,
       searchId: '',
       text: '日程未選択です',
-      // 時間昇順->日付昇順にする
-      reservationAvailableSchedules: [],
+      schedules: [],
       matchedReservation: null,
     }
   },
@@ -57,9 +56,8 @@ export default {
   },
   async created() {
     await this.$accessor.getReservations()
-    await this.$accessor.getReservationAvailableSchedules()
-    this.reservationAvailableSchedules =
-      this.$accessor.reservationAvailableSchedules
+    await this.$accessor.getSchedules()
+    this.schedules = this.$accessor.schedules
 
     this.isShow = true
   },
@@ -67,19 +65,14 @@ export default {
     searchReservation() {
       this.beforeSearch = false
       this.matchedReservation = this.reservations.find(
-        (reservation) => reservation.searchId === this.searchId
+        (reservation) => reservation.search_id === this.searchId
       )
     },
     goToRegister(scheduleId) {
       this.$router.push(`/reservations/${scheduleId}`)
     },
     async deleteReservation(reservation) {
-      await this.$accessor.deleteReservation(reservation.id)
-
-      await this.$accessor.incrementAvailableNumber({
-        date: reservation.date,
-        startTime: reservation.startTime,
-      })
+      await this.$accessor.deleteReservation(reservation)
 
       alert('予約に取り消しに成功しました。')
     },

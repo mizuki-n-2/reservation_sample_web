@@ -17,7 +17,7 @@
                 <v-list-item-content>
                   <v-list-item-title
                     >予約時間：
-                    {{ reservation.startTime }}開始</v-list-item-title
+                    {{ formatStartTime }}開始</v-list-item-title
                   >
                 </v-list-item-content>
               </v-list-item>
@@ -25,7 +25,7 @@
                 <v-list-item-content>
                   <v-list-item-title
                     >予約人数：
-                    {{ reservation.numberOfPeople }}人</v-list-item-title
+                    {{ numberOfPeople }}人</v-list-item-title
                   >
                 </v-list-item-content>
               </v-list-item>
@@ -46,7 +46,7 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title
-                    >電話番号： {{ reservation.phoneNumber }}</v-list-item-title
+                    >電話番号： {{ reservation.phone_number }}</v-list-item-title
                   >
                 </v-list-item-content>
               </v-list-item>
@@ -75,33 +75,48 @@ export default {
     reservation: {
       type: Object,
       required: true,
-      default: () => ({
-        id: 0,
-        date: '',
-        startTime: '',
-        numberOfPeople: 0,
-        name: '',
-        email: '',
-        phoneNumber: '',
-        searchId: '',
-      }),
+      default: () => ({}),
     },
+  },
+  data() {
+    return {
+      date: '',
+      startTime: '',
+    }
   },
   computed: {
     isCanBeCanceled() {
       return this.canBeCanceled(
-        this.reservation.date,
-        this.reservation.startTime
+        this.date,
+        this.startTime
       )
     },
     formatDate() {
-      return moment(this.reservation.date).format('YYYY年M月D日(dd)')
+      return moment(this.date).format('YYYY年M月D日(dd)')
     },
+    formatStartTime() {
+      return moment(this.startTime, 'HH:mm').format('H:mm')
+    },
+    numberOfPeople() {
+      return (
+        this.reservation.adult_number +
+        this.reservation.primary_school_child_number +
+        this.reservation.child_number
+      )
+    },
+  },
+  async created() {
+    await this.$accessor.getSchedules()
+    const schedule = this.$accessor.findSchedule(
+      this.reservation.schedule_id
+    )
+    this.date = schedule.date
+    this.startTime = schedule.start_time
   },
   methods: {
     deleteReservation() {
       if (
-        !this.canBeCanceled(this.reservation.date, this.reservation.startTime)
+        !this.canBeCanceled(this.date, this.startTime)
       ) {
         alert(
           `予約日の${BEFORE_CANCEL_DEADLINE_DAYS}日前のため、ここから予約を取り消すことはできません。\n予約を取り消したい場合は管理者にお電話で直接お問い合わせください。`

@@ -46,7 +46,7 @@ import _ from 'lodash'
 
 export default {
   props: {
-    reservationAvailableSchedules: {
+    schedules: {
       type: Array,
       required: true,
       default: () => [],
@@ -57,7 +57,7 @@ export default {
       dateList: [],
       weekNumber: 7,
       availableHourList: [
-        '9:00',
+        '09:00',
         '10:00',
         '11:00',
         '12:00',
@@ -112,20 +112,20 @@ export default {
       const returnArray = []
 
       const availableSchedules = _.intersectionWith(
-        this.reservationAvailableSchedules,
+        this.schedules,
         this.dateList,
         (a, b) => {
           return (
-            !this.isBeforeCurrentTime(this.formatDate(a.date), a.startTime) &&
+            !this.isBeforeCurrentTime(this.formatDate(a.date), a.start_time) &&
             this.formatDate(a.date) === b &&
-            a.startTime === this.availableHourList[index]
+            a.start_time === this.availableHourList[index]
           )
         }
       )
 
       for (let i = 0; i < this.weekNumber; i++) {
         const pushedObject = {
-          id: 0,
+          id: "",
           status: '-',
         }
         if (
@@ -133,7 +133,7 @@ export default {
           this.dateList[i] === this.formatDate(availableSchedules[0].date)
         ) {
           pushedObject.id = availableSchedules[0].id
-          pushedObject.status = this.calculateStatus(availableSchedules[0].availableNumber, availableSchedules[0].totalNumber)
+          pushedObject.status = this.calculateStatus(availableSchedules[0].reservation_number, availableSchedules[0].max_number)
         }
         returnArray.push(pushedObject)
       }
@@ -152,8 +152,8 @@ export default {
     formatDate(date) {
       return moment(date).format('M/D(dd)')
     },
-    calculateStatus(availableNumber, totalNumber) {
-      const rate = availableNumber / totalNumber
+    calculateStatus(reservationNumber, maxNumber) {
+      const rate = (maxNumber - reservationNumber) / maxNumber
       if (rate >= 0.5) {
         return '◎'
       } else if (rate > 0) {
@@ -179,12 +179,12 @@ export default {
         return
       }
 
-      if (availability.id === 0) {
+      if (availability.id === "") {
         alert('予期せぬエラーが発生しました。')
         return
       }
 
-      this.$emit('sendReservationDatetime', availability.id)
+      this.$emit('sendSchedule', availability.id)
     },
   },
 }

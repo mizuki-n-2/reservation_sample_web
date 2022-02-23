@@ -27,17 +27,6 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-text-field
-                    v-model="furigana"
-                    prefix="ふりがな： "
-                    :counter="20"
-                    :rules="[rules.required, rules.maxLengthName]"
-                    required
-                  ></v-text-field>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-text-field
                     v-model="email"
                     prefix="メールアドレス： "
                     :rules="[rules.required, rules.email]"
@@ -59,7 +48,7 @@
                 <v-list-item-content>
                   <v-text-field
                     v-model="phoneNumber"
-                    prefix="電話番号： "
+                    prefix="電話番号(ハイフンなし)： "
                     :counter="13"
                     :rules="[rules.required, rules.phoneNumber]"
                     required
@@ -87,7 +76,7 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-text-field
-                    v-model="adultNumber"
+                    v-model.number="adultNumber"
                     prefix="大人(中学生~)： "
                     suffix="人"
                     :rules="[rules.positiveInteger]"
@@ -104,7 +93,7 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-text-field
-                    v-model="primarySchoolChildNumber"
+                    v-model.number="primarySchoolChildNumber"
                     prefix="小学生： "
                     suffix="人"
                     :rules="[rules.positiveInteger]"
@@ -122,7 +111,7 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-text-field
-                    v-model="childNumber"
+                    v-model.number="childNumber"
                     prefix="子供(3歳~小学生未満)： "
                     suffix="人"
                     :rules="[rules.positiveInteger]"
@@ -141,43 +130,6 @@
                   <v-list-item-title>
                     合計金額： {{ totalAmount }}円
                   </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title
-                    >さくらんぼ狩りは初めてですか？</v-list-item-title
-                  >
-                </v-list-item-content>
-                <v-list-item-content>
-                  <v-radio-group v-model="isFirst" required row>
-                    <v-radio label="はい" :value="true"></v-radio>
-                    <v-radio label="いいえ" :value="false"></v-radio>
-                  </v-radio-group>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item v-if="!isFirst">
-                <v-list-item-content>
-                  <v-list-item-title
-                    >いいえと答えた方、当園は何回目ですか？</v-list-item-title
-                  >
-                </v-list-item-content>
-                <v-list-item-content>
-                  <v-select
-                    v-model="numberOfVisits"
-                    :items="numberOfVisitsItems"
-                    dense
-                  ></v-select>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>質問があればこちらに</v-list-item-title>
-                  <v-textarea
-                    v-model="question"
-                    :counter="255"
-                    :rules="[rules.maxLengthQuestion]"
-                  ></v-textarea>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item>
@@ -222,7 +174,6 @@ export default {
       date: '',
       startTime: '',
       name: '',
-      furigana: '',
       email: '',
       emailConfirm: '',
       phoneNumber: '',
@@ -233,11 +184,7 @@ export default {
       primarySchoolChildAmount: 1700,
       childNumber: 0,
       childAmount: 1100,
-      isFirst: null,
-      numberOfVisits: null,
-      question: '',
       finalCheck: false,
-      numberOfVisitsItems: ['初めて', '2回目', '3回目', '4回目以上'],
       rules: {
         required: (value) => !!value || '必須項目です。',
         email: (value) => {
@@ -251,7 +198,7 @@ export default {
           return value === this.email || 'メールアドレスが一致しません。'
         },
         phoneNumber: (value) => {
-          const PHONE_NUMBER_PATTERN = /^0[-0-9]{9,12}$/
+          const PHONE_NUMBER_PATTERN = /^0[0-9]{9,12}$/
           return (
             PHONE_NUMBER_PATTERN.test(value) ||
             '電話番号の形式が正しくありません。'
@@ -279,13 +226,6 @@ export default {
             `文字数は${ADDRESS_MAX_LENGTH}以下にしてください。`
           )
         },
-        maxLengthQuestion: (value) => {
-          const QUESTION_MAX_LENGTH = 255
-          return (
-            value.length <= QUESTION_MAX_LENGTH ||
-            `文字数は${QUESTION_MAX_LENGTH}以下にしてください。`
-          )
-        },
       },
     }
   },
@@ -308,13 +248,13 @@ export default {
     },
   },
   async created() {
-    await this.$accessor.getReservationAvailableSchedules()
-    this.scheduleId = parseInt(this.$route.params.availableScheduleId)
-    const availableSchedule = this.$accessor.findAvailableSchedule(
+    await this.$accessor.getSchedules()
+    this.scheduleId = this.$route.params.scheduleId
+    const schedule = this.$accessor.findSchedule(
       this.scheduleId
     )
-    this.date = availableSchedule.date
-    this.startTime = availableSchedule.startTime
+    this.date = schedule.date
+    this.startTime = schedule.start_time
   },
   methods: {
     submitReservation() {
@@ -329,24 +269,14 @@ export default {
       }
 
       const reservation = {
-        date: this.date,
-        startTime: this.startTime,
         name: this.name,
-        furigana: this.furigana,
         email: this.email,
-        phoneNumber: this.phoneNumber,
+        phone_number: this.phoneNumber,
         address: this.address,
-        adultNumber: this.adultNumber,
-        adultAmount: this.adultAmount,
-        primarySchoolChildNumber: this.primarySchoolChildNumber,
-        primarySchoolChildAmount: this.primarySchoolChildAmount,
-        childNumber: this.childNumber,
-        childAmount: this.childAmount,
-        isFirst: this.isFirst,
-        numberOfVisits: this.numberOfVisits,
-        question: this.question,
-        totalAmount: this.totalAmount,
-        scheduleId: this.scheduleId,
+        adult_number: this.adultNumber,
+        primary_school_child_number: this.primarySchoolChildNumber,
+        child_number: this.childNumber,
+        schedule_id: this.scheduleId,
       }
       this.$emit('submitReservation', reservation)
     },

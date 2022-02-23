@@ -14,8 +14,6 @@ export default {
   methods: {
     async submitReservation(reservation) {
       await this.$accessor.postReservation(reservation)
-
-      await this.$accessor.decrementAvailableNumber(reservation.scheduleId)
       
       alert("予約に成功しました。")
       this.$router.push('/')
