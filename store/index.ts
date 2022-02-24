@@ -4,7 +4,7 @@ import {
   mutationTree,
   actionTree,
 } from 'typed-vuex'
-import { Reservation, ReservationRequest, Schedule } from '~/types'
+import { Reservation, ReservationRequest, Schedule, LoginRequest, ScheduleRequest } from '~/types'
 
 export const state = () => ({
   reservations: [] as Reservation[],
@@ -17,6 +17,7 @@ export const getters = getterTree(state, {
   schedules: (state) => state.schedules,
   findSchedule: (state) => (id: string) =>
     state.schedules.find((schedule) => schedule.id === id),
+  token: (state) => state.token,
 })
 
 export const mutations = mutationTree(state, {
@@ -31,8 +32,28 @@ export const mutations = mutationTree(state, {
       (reservation) => reservation.id !== reservationId
     )
   },
+  deleteReservationByScheduleId(state, scheduleId: string) {
+    state.reservations = state.reservations.filter(
+      (reservation) => reservation.schedule_id !== scheduleId
+    )
+  },
   setSchedules(state, schedules: Schedule[]) {
     state.schedules = schedules
+  },
+  addSchedule(state, schedule: Schedule) {
+    state.schedules.push(schedule)
+  },
+  updateSchedule(state, schedule: Schedule) {
+    const index = state.schedules.findIndex(
+      (s) => s.id === schedule.id
+    )
+    if (index === -1) return
+    state.schedules[index] = schedule
+  },
+  deleteSchedule(state, scheduleId: string) {
+    state.schedules = state.schedules.filter(
+      (schedule) => schedule.id !== scheduleId
+    )
   },
   incrementReservationNumber(state, scheduleId: string) {
     const index = state.schedules.findIndex(
@@ -48,6 +69,9 @@ export const mutations = mutationTree(state, {
     if (index === -1) return
     state.schedules[index].reservation_number -= 1
   },
+  setToken(state, token: string) {
+    state.token = token
+  }
 })
 
 export const actions = actionTree(
@@ -66,10 +90,8 @@ export const actions = actionTree(
 
       commit('setSchedules', sortedSchedules)
     },
-    async postReservation({ commit }, reservationRequest: ReservationRequest) {
-      console.log(reservationRequest)
+    async createReservation({ commit }, reservationRequest: ReservationRequest) {
       const reservation = await this.$axios.$post('/reservations', reservationRequest)
-      console.log(reservation)
 
       commit('addReservation', reservation)
       commit('incrementReservationNumber', reservation.scheduleId)
@@ -80,6 +102,32 @@ export const actions = actionTree(
       commit('deleteReservation', reservation.id)
       commit('decrementReservationNumber', reservation.schedule_id)
     },
+    async createSchedule({ commit }, scheduleRequest: ScheduleRequest) {
+      this.$axios.setToken(this.state.token, 'Bearer')
+      const schedule = await this.$axios.$post('/admin/schedules', scheduleRequest)
+
+      commit('addSchedule', schedule)
+    },
+    async updateScheduleMaxNumber({ commit }, scheduleInfo: { id: string; max_number: number }) {
+      this.$axios.setToken(this.state.token, 'Bearer')
+      const schedule = await this.$axios.$patch(`/admin/schedules/${scheduleInfo.id}`, {
+        max_number: scheduleInfo.max_number,
+      })
+
+      commit('updateSchedule', schedule)
+    },
+    async deleteSchedule({ commit }, scheduleId: string) {
+      this.$axios.setToken(this.state.token, 'Bearer')
+      await this.$axios.$delete(`/admin/schedules/${scheduleId}`)
+
+      commit('deleteSchedule', scheduleId)
+      commit('deleteReservationByScheduleId', scheduleId)
+    },
+    async login({ commit }, loginRequest: LoginRequest) {      
+      const res = await this.$axios.$post('/login', loginRequest)
+
+      commit('setToken', res.token)
+    }
   }
 )
 
