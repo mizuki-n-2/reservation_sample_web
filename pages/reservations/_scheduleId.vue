@@ -13,7 +13,7 @@ export default {
   },
   methods: {
     async submitReservation(reservation) {
-      await this.$accessor.postReservation(reservation)
+      await this.$accessor.createReservation(reservation)
       
       alert("予約に成功しました。")
       this.$router.push('/')
