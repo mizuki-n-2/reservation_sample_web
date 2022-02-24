@@ -44,7 +44,6 @@ export default {
       isShow: false,
       beforeSearch: true,
       searchId: '',
-      text: '日程未選択です',
       schedules: [],
       matchedReservation: null,
     }
