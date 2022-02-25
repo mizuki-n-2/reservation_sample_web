@@ -24,7 +24,7 @@
             <td>{{ availableHour }}</td>
             <td v-for="(availability, j) in hourlyAvailabilityList[i]" :key="j">
               <a
-                class="white--text d-block text-center"
+                class="black--text d-block text-center"
                 @click="
                   sendReservation(availability, dateList[j], availableHour)
                 "

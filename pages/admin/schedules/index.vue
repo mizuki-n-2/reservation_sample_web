@@ -78,11 +78,11 @@
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-btn color="green" class="mr-2 user-select-none" @click.right.prevent="editItem(item)">
+      <v-btn color="green" class="mr-2 user-select-none white--text" @click.right.prevent="editItem(item)">
         <v-icon small left> mdi-pencil </v-icon>
         編集
       </v-btn>
-      <v-btn color="red" class="user-select-none" @click.right.prevent="deleteItem(item)">
+      <v-btn color="red" class="user-select-none white--text" @click.right.prevent="deleteItem(item)">
         <v-icon small left> mdi-delete </v-icon>
         削除
       </v-btn>
