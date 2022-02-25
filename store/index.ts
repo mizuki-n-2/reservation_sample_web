@@ -17,6 +17,8 @@ export const getters = getterTree(state, {
   schedules: (state) => state.schedules,
   findSchedule: (state) => (id: string) =>
     state.schedules.find((schedule) => schedule.id === id),
+  filterReservationsByScheduleId: (state) => (scheduleId: string) =>
+    state.reservations.filter((reservation) => reservation.schedule_id === scheduleId),
   token: (state) => state.token,
 })
 

@@ -1,5 +1,5 @@
 <template>
-  <v-data-table :headers="headers" :items="schedules" class="elevation-1">
+  <v-data-table :headers="headers" :items="schedules" class="elevation-1" @click:row="goToReservations">
     <template #top>
       <v-toolbar flat>
         <v-toolbar-title>予約可能日程</v-toolbar-title>
@@ -78,8 +78,14 @@
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+      <v-btn color="green" class="mr-2 user-select-none" @click.right.prevent="editItem(item)">
+        <v-icon small left> mdi-pencil </v-icon>
+        編集
+      </v-btn>
+      <v-btn color="red" class="user-select-none" @click.right.prevent="deleteItem(item)">
+        <v-icon small left> mdi-delete </v-icon>
+        削除
+      </v-btn>
     </template>
     <template #no-data>
       まだデータがありません。予約可能日を登録してください。
@@ -103,7 +109,7 @@ export default {
       { text: '予約上限数', value: 'max_number' },
       { text: '現在の予約数', value: 'reservation_number' },
       { text: '予約可能数', value: 'available_number' },
-      { text: '', value: 'actions', sortable: false },
+      { text: '右クリックで編集・削除！', value: 'actions', sortable: false },
     ],
     schedules: [],
     editedIndex: -1,
@@ -213,7 +219,10 @@ export default {
           id: this.schedules[this.editedIndex].id,
           max_number: this.editedItem.max_number,
         })
-        Object.assign(this.schedules[this.editedIndex], this.editedItem)
+        Object.assign(this.schedules[this.editedIndex], {
+          ...this.editedItem,
+          available_number: this.editedItem.max_number - this.editedItem.reservation_number,
+        })
       } else {
         await this.$accessor.createSchedule({
           date: this.editedItem.date,
@@ -229,6 +238,15 @@ export default {
       }
       this.close()
     },
+    goToReservations(data) {
+      this.$router.push(`/admin/schedules/${data.id}/reservations`)
+    }
   },
 }
 </script>
+
+<style scoped>
+.user-select-none {
+  user-select: none;
+}
+</style>

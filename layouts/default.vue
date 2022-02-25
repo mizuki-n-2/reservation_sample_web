@@ -56,20 +56,15 @@ export default {
       userItems: [
         {
           icon: 'mdi-calendar-clock',
-          title: '予約画面',
+          title: '予約',
           to: '/',
         },
       ],
       adminItems: [
         {
           icon: 'mdi-calendar-check',
-          title: '予約確認',
-          to: '/admin/reservations',
-        },
-        {
-          icon: 'mdi-cog',
-          title: '設定',
-          to: '/admin/reservations/settings',
+          title: '予約管理',
+          to: '/admin/schedules',
         },
       ],
       miniVariant: true,
