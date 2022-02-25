@@ -11,6 +11,12 @@ export default {
   components: {
     ReservationRegisterCard,
   },
+  created() {
+    const isAdmin = this.$accessor.isAdmin
+    if (isAdmin) {
+      this.$router.push('/admin')
+    }
+  },
   methods: {
     async submitReservation(reservation) {
       await this.$accessor.createReservation(reservation)

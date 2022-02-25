@@ -54,6 +54,11 @@ export default {
     },
   },
   async created() {
+    const isAdmin = this.$accessor.isAdmin
+    if (isAdmin) {
+      this.$router.push('/admin')
+    }
+    
     await this.$accessor.getReservations()
     await this.$accessor.getSchedules()
     this.schedules = this.$accessor.schedules

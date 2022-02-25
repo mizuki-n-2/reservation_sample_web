@@ -10,6 +10,7 @@ export const state = () => ({
   reservations: [] as Reservation[],
   schedules: [] as Schedule[],
   token: '' as string,
+  isAdmin: false as boolean,
 })
 
 export const getters = getterTree(state, {
@@ -20,6 +21,7 @@ export const getters = getterTree(state, {
   filterReservationsByScheduleId: (state) => (scheduleId: string) =>
     state.reservations.filter((reservation) => reservation.schedule_id === scheduleId),
   token: (state) => state.token,
+  isAdmin: (state) => state.isAdmin,
 })
 
 export const mutations = mutationTree(state, {
@@ -73,7 +75,10 @@ export const mutations = mutationTree(state, {
   },
   setToken(state, token: string) {
     state.token = token
-  }
+  },
+  setIsAdmin(state, isAdmin: boolean) {
+    state.isAdmin = isAdmin
+  },
 })
 
 export const actions = actionTree(
@@ -129,7 +134,10 @@ export const actions = actionTree(
       const res = await this.$axios.$post('/login', loginRequest)
 
       commit('setToken', res.token)
-    }
+    },
+    changeRole({ commit }, isAdmin: boolean) {
+      commit('setIsAdmin', isAdmin)
+    },
   }
 )
 

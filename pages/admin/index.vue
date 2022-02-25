@@ -1,36 +1,40 @@
 <template>
   <v-row justify="center">
     <v-col cols="12" sm="10" md="8" lg="6">
-      <v-card ref="form" class="mt-3">
+      <v-card class="mt-3">
         <v-card-title class="d-flex justify-center"
           >管理者ログイン</v-card-title
         >
-        <v-card-text>
-          <v-text-field
-            v-model="email"
-            :rules="[rules.required, rules.email]"
-            label="メールアドレス"
-            required
-          ></v-text-field>
-          <v-text-field
-            v-model="password"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            :rules="[
-              rules.required,
-              rules.minLengthPassword,
-              rules.maxLengthPassword,
-            ]"
-            :type="showPassword ? 'text' : 'password'"
-            label="パスワード"
-            hint="8文字以上30文字以下にしてください"
-            counter
-            required
-            @click:append="showPassword = !showPassword"
-          ></v-text-field>
-        </v-card-text>
-        <v-card-actions class="d-flex justify-center">
-          <v-btn color="primary" class="mb-3" @click="login"> ログイン </v-btn>
-        </v-card-actions>
+        <v-form ref="form">
+          <v-card-text>
+            <v-text-field
+              v-model="email"
+              :rules="[rules.required, rules.email]"
+              label="メールアドレス"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="password"
+              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+              :rules="[
+                rules.required,
+                rules.minLengthPassword,
+                rules.maxLengthPassword,
+              ]"
+              :type="showPassword ? 'text' : 'password'"
+              label="パスワード"
+              hint="8文字以上30文字以下にしてください"
+              counter
+              required
+              @click:append="showPassword = !showPassword"
+            ></v-text-field>
+          </v-card-text>
+          <v-card-actions class="d-flex justify-center">
+            <v-btn color="primary" class="mb-3" @click="login">
+              ログイン
+            </v-btn>
+          </v-card-actions>
+        </v-form>
       </v-card>
     </v-col>
   </v-row>
@@ -69,6 +73,12 @@ export default {
       },
     }
   },
+  created() {
+    const isAdmin = this.$accessor.isAdmin
+    if (!isAdmin) {
+      this.$router.push('/')
+    }
+  },
   methods: {
     async login() {
       if (!this.$refs.form.validate()) {
@@ -80,7 +90,7 @@ export default {
         password: this.password,
       })
 
-      this.$router.push('/admin/reservations')
+      this.$router.push('/admin/schedules')
     },
   },
 }

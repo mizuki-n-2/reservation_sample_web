@@ -1,28 +1,7 @@
 <template>
   <v-app>
-    <v-navigation-drawer :mini-variant="miniVariant" fixed app>
-      <v-list>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
     <v-app-bar fixed app>
-      <v-btn icon @click.stop="miniVariant = !miniVariant">
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
-
+      <v-icon left>mdi-calendar-clock</v-icon>
       <v-toolbar-title v-text="title" />
 
       <v-spacer />
@@ -53,21 +32,6 @@ export default {
   data() {
     return {
       isAdmin: false,
-      userItems: [
-        {
-          icon: 'mdi-calendar-clock',
-          title: '予約',
-          to: '/',
-        },
-      ],
-      adminItems: [
-        {
-          icon: 'mdi-calendar-check',
-          title: '予約管理',
-          to: '/admin/schedules',
-        },
-      ],
-      miniVariant: true,
       title: '観光予約システム',
     }
   },
@@ -76,9 +40,14 @@ export default {
       return this.isAdmin ? this.adminItems : this.userItems
     },
   },
+  created() {
+    this.isAdmin = this.$accessor.isAdmin
+  },
   methods: {
     changeRole() {
-      if(!this.isAdmin) {
+      this.$accessor.changeRole(!this.isAdmin)
+
+      if (!this.isAdmin) {
         this.$router.push('/admin')
       } else {
         this.$router.push('/')
@@ -86,6 +55,6 @@ export default {
 
       this.isAdmin = !this.isAdmin
     },
-  }
+  },
 }
 </script>

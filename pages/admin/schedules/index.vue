@@ -161,6 +161,11 @@ export default {
     },
   },
   async created() {
+    const isAdmin = this.$accessor.isAdmin
+    if (!isAdmin) {
+      this.$router.push('/')
+    }
+    
     await this.$accessor.getSchedules()
     this.schedules = this.$accessor.schedules.map((item) => {
       return {
