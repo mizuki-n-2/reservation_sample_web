@@ -66,7 +66,8 @@
 </template>
 
 <script>
-import moment from 'moment'
+import * as moment from 'moment'
+import 'moment/locale/ja'
 
 const BEFORE_CANCEL_DEADLINE_DAYS = 1
 

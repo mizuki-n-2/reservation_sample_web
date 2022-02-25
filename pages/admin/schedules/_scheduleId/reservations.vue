@@ -41,7 +41,8 @@
 </template>
 
 <script>
-import moment from 'moment'
+import * as moment from 'moment'
+import 'moment/locale/ja'
 import VueJsonToCsv from 'vue-json-to-csv'
 
 export default {

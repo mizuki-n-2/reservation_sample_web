@@ -94,7 +94,8 @@
 </template>
 
 <script>
-import moment from 'moment'
+import * as moment from 'moment'
+import 'moment/locale/ja'
 
 export default {
   data: () => ({
@@ -165,7 +166,7 @@ export default {
     if (!isAdmin) {
       this.$router.push('/')
     }
-    
+
     await this.$accessor.getSchedules()
     this.schedules = this.$accessor.schedules.map((item) => {
       return {
