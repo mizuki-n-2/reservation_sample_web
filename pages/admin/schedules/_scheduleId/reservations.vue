@@ -91,7 +91,7 @@ export default {
         return {
           name: reservation.name,
           email: reservation.email,
-          phone_number: "'" + reservation.phone_number,
+          phone_number: reservation.phone_number,
           address: reservation.address,
           adult_number: reservation.adult_number,
           primary_school_child_number: reservation.primary_school_child_number,

@@ -48,7 +48,7 @@
                 <v-list-item-content>
                   <v-text-field
                     v-model="phoneNumber"
-                    prefix="電話番号(ハイフンなし)： "
+                    prefix="電話番号(ハイフンあり)： "
                     :counter="13"
                     :rules="[rules.required, rules.phoneNumber]"
                     required
@@ -198,7 +198,7 @@ export default {
           return value === this.email || 'メールアドレスが一致しません。'
         },
         phoneNumber: (value) => {
-          const PHONE_NUMBER_PATTERN = /^0[0-9]{9,12}$/
+          const PHONE_NUMBER_PATTERN = /^0\d{1,3}-\d{1,4}-\d{3,4}$/
           return (
             PHONE_NUMBER_PATTERN.test(value) ||
             '電話番号の形式が正しくありません。'
